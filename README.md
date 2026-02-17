@@ -1,5 +1,5 @@
 # Moonshine-OS
-OS+custom kernel
+OS+custom kernel+ built-in grub bootloader
 
 
 
