@@ -1,28 +1,37 @@
 #include <stdint.h>
+#include "../drivers/vga.h"
 
-// The screen lives at this memory address
-volatile uint16_t* screen = (volatile uint16_t*)0xB8000;
-
-// Write a string to the screen
-// Each cell = character | (color << 8)
-// 0x0F = white on black
-void print(const char* str) {
-    int i = 0;
-    while (*str) {
-        screen[i] = *str | (0x0F << 8);
-        str++;
-        i++;
-    }
-}
-
-// Entry point — called from boot.asm
 extern "C" void kernel_main(uint32_t magic, uint32_t* mbi_ptr) {
-    (void)magic;
     (void)mbi_ptr;
 
-    print("Hello from Moonshine-OS!");
+    clear();
 
-    while (true) {
+    if (magic != 0x36D76289) { // this has to happen im just the messenger
+        set_color(12, 0);
+        print("not booted by multiboot2!\n");
+        return;
+    }
+
+    set_color(10, 0); // black background
+    print("Moonshine-OS v0.1\n");
+
+    for (int n = 0; n < 160; n++) {
+        set_color(n, (n + 1) % 16);
+        print("man this shit lookes ass.\n");
+    }
+
+    for (int n = 0; n < 160; n++) {
+        set_color(n, (n^67) % 16);
+        print("actually this looks majestic\n");
+    }
+
+    set_color(15, 0);
+    clear();
+
+    set_color(15, 0);
+    print("kernel loaded. peak has finally arrived\n");
+
+    while (true) { // halt forever!!!
         asm volatile("hlt");
     }
 }

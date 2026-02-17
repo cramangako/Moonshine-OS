@@ -8,8 +8,11 @@ CXXFLAGS = -m32 -ffreestanding -fno-exceptions -fno-rtti -nostdlib -Wall -Wextra
 LDFLAGS  = -m elf_i386 -T linker.ld -nostdlib
 
 BOOT_OBJ = build/boot.o
-CXX_SRCS = $(wildcard kernel/*.cpp)
-CXX_OBJS = $(patsubst kernel/%.cpp,build/%.o,$(CXX_SRCS))
+KERN_SRCS = $(wildcard kernel/*.cpp)
+DRV_SRCS  = $(wildcard drivers/*.cpp)
+KERN_OBJS = $(patsubst kernel/%.cpp,build/kernel_%.o,$(KERN_SRCS))
+DRV_OBJS  = $(patsubst drivers/%.cpp,build/drivers_%.o,$(DRV_SRCS))
+CXX_OBJS  = $(KERN_OBJS) $(DRV_OBJS)
 KERNEL   = build/moonshine.bin
 ISO      = moonshine.iso
 USB_DEV  = /dev/sdb
@@ -22,7 +25,11 @@ $(BOOT_OBJ): boot/boot.asm
 	@mkdir -p build
 	$(ASM) $(ASMFLAGS) $< -o $@
 
-build/%.o: kernel/%.cpp
+build/kernel_%.o: kernel/%.cpp
+	@mkdir -p build
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+build/drivers_%.o: drivers/%.cpp
 	@mkdir -p build
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
