@@ -6,6 +6,12 @@
 
 volatile uint16_t* screen = (volatile uint16_t*)0xB8000;
 
+// limine doesn't identity-map low physical memory in the upper half
+// so we need the hhdm offset to find where 0xB8000 actually lives
+void vga_init(uint64_t hhdm_offset) {
+    screen = (volatile uint16_t*)(hhdm_offset + 0xB8000);
+}
+
 int cursor_x = 0; // current column (0-79) (top left corner of the screen)
 int cursor_y = 0; // current row (0-24) (top left corner of the screen)
 uint8_t color = 0x0F; // white on black

@@ -1,19 +1,21 @@
-ASM      = nasm
 CXX      = g++
 LD       = ld
-GRUB_ISO = grub2-mkrescue
+LIMINE   = limine
 
-ASMFLAGS = -f elf32
-CXXFLAGS = -m32 -ffreestanding -fno-exceptions -fno-rtti -nostdlib -Wall -Wextra
-LDFLAGS  = -m elf_i386 -T linker.ld -nostdlib
+# 64-bit, no standard library, no SSE (unsafe in kernel code)
+CXXFLAGS = -std=c++17 -ffreestanding -fno-exceptions -fno-rtti -nostdlib \
+           -Wall -Wextra -mno-red-zone -mno-mmx -mno-sse -mno-sse2 \
+           -mcmodel=kernel
 
-BOOT_OBJ = build/boot.o
+LDFLAGS  = -T linker.ld -nostdlib -zmax-page-size=0x1000
+
 KERN_SRCS = $(wildcard kernel/*.cpp)
 DRV_SRCS  = $(wildcard drivers/*.cpp)
 KERN_OBJS = $(patsubst kernel/%.cpp,build/kernel_%.o,$(KERN_SRCS))
 DRV_OBJS  = $(patsubst drivers/%.cpp,build/drivers_%.o,$(DRV_SRCS))
 CXX_OBJS  = $(KERN_OBJS) $(DRV_OBJS)
-KERNEL   = build/moonshine.bin
+
+KERNEL   = build/moonshine.elf
 ISO      = moonshine.iso
 USB_DEV  = /dev/sdb
 
@@ -21,11 +23,17 @@ USB_DEV  = /dev/sdb
 
 all: $(KERNEL)
 
-$(BOOT_OBJ): boot/boot.asm
-	@mkdir -p build
-	$(ASM) $(ASMFLAGS) $< -o $@
+# download limine bootloader if not already present
+$(LIMINE):
+	git clone https://github.com/limine-bootloader/limine.git \
+	    --branch=v8.x-binary --depth=1 $(LIMINE)
+	$(MAKE) -C $(LIMINE)
 
-build/kernel_%.o: kernel/%.cpp
+# download limine.h if not already present
+kernel/limine.h:
+	curl -Lo $@ https://raw.githubusercontent.com/limine-bootloader/limine/v8.x-binary/limine.h
+
+build/kernel_%.o: kernel/%.cpp kernel/limine.h
 	@mkdir -p build
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
@@ -33,18 +41,30 @@ build/drivers_%.o: drivers/%.cpp
 	@mkdir -p build
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(KERNEL): $(BOOT_OBJ) $(CXX_OBJS)
+$(KERNEL): $(CXX_OBJS)
 	$(LD) $(LDFLAGS) -o $@ $^
 
-iso: $(KERNEL)
-	@cp $(KERNEL) iso/boot/moonshine.bin
-	$(GRUB_ISO) -o $(ISO) iso
+iso: $(KERNEL) $(LIMINE)
+	@mkdir -p iso_root/EFI/BOOT
+	cp $(KERNEL) iso_root/moonshine.elf
+	cp limine.conf iso_root/
+	cp $(LIMINE)/limine-bios.sys $(LIMINE)/limine-bios-cd.bin \
+	   $(LIMINE)/limine-uefi-cd.bin iso_root/
+	cp $(LIMINE)/BOOTX64.EFI iso_root/EFI/BOOT/
+	xorriso -as mkisofs \
+	    -b limine-bios-cd.bin \
+	    --no-emul-boot --boot-load-size 4 --boot-info-table \
+	    --efi-boot limine-uefi-cd.bin \
+	    -efi-boot-part --efi-boot-image --protective-msdos-label \
+	    iso_root -o $(ISO)
+	$(LIMINE)/limine bios-install $(ISO)
+	@rm -rf iso_root
 
 run: iso
-	qemu-system-i386 -cdrom $(ISO)
+	qemu-system-x86_64 -cdrom $(ISO) -m 256M
 
 usb: iso
 	sudo dd if=$(ISO) of=$(USB_DEV) bs=4M status=progress conv=fdatasync
 
 clean:
-	rm -rf build $(ISO) iso/boot/moonshine.bin
+	rm -rf build iso_root $(ISO)

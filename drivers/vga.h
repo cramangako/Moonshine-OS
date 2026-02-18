@@ -21,6 +21,7 @@
 // 14 = yellow
 // 15 = white
 
+void vga_init(uint64_t hhdm_offset); // call this first with limine's hhdm offset
 void clear();
 void scroll();
 void putchar(char c);

@@ -1,3 +1,5 @@
 build/
 *.iso
-iso/boot/moonshine.bin
+iso_root/
+limine/
+kernel/limine.h
