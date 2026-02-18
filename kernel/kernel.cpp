@@ -20,7 +20,7 @@ extern "C" void kernel_main(uint32_t magic, uint32_t* mbi_ptr) {
     clear();
 
     set_color(10, 0); // black background
-    print("Moonshine-OS v0.1\n");
+    print("Moonshine-OS v2.0.1\n");
 
     set_color(15, 0);
     print("kernel loaded. peak has finally arrived\n");
