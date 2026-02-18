@@ -1,7 +1,7 @@
 # Moonshine-OS
 OS+custom kernel+ built-in grub bootloader
 
-
+# VERSION: Prototype 2.0.1
 
 # how to compile and use
 
