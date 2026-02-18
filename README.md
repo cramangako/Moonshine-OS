@@ -93,10 +93,5 @@ Removes generated files so you can rebuild from scratch.
 
 ------------------------------------------------------------------------
 
-Beginner Advice
-
-If you’re new to OS development, start with:
-
-make run
-
-It’s the safest way to test without risking your computer.
+Made with love by Realyby And Cramangako
+💙
