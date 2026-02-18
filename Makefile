@@ -5,7 +5,7 @@ LIMINE   = limine
 # 64-bit, no standard library, no SSE (unsafe in kernel code)
 CXXFLAGS = -std=c++17 -ffreestanding -fno-exceptions -fno-rtti -nostdlib \
            -Wall -Wextra -mno-red-zone -mno-mmx -mno-sse -mno-sse2 \
-           -mcmodel=kernel
+           -mcmodel=kernel -fno-pic
 
 LDFLAGS  = -T linker.ld -nostdlib -zmax-page-size=0x1000
 
