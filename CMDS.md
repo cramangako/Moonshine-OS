@@ -4,30 +4,31 @@
 
 # WORKING
 
+console_speak - console_speak("hello world")
+
+console_clear - console_clear()
+
+console_putchar - console_putchar('A')
+
+scroll - automatic when text hits the bottom of the screen
 
 ------------------------------------------------------------------------
 
 # TO DO
 
-speak - speak ("hello world")
+set_color - change fg/bg color mid-session
 
-clear - clear (clears all)
+version - print current OS version string
 
-putchar - putchar 1
+halt - expose halt as a typed command
 
-set_color - set_color 5
-
-scroll - scroll (scrolls) 
-
-version - tells you the current version
+nuke - blow up everything
 
 ------------------------------------------------------------------------
 
 # Possible to be made in the future 
 
-
-
-idk yet
+echo {text}
 
 
 
