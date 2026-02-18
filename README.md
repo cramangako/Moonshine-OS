@@ -3,7 +3,7 @@ OS+custom kernel+ built-in grub bootloader
 
 # VERSION: Prototype 2.0.1
 
-# how to compile and use
+# how to compile and use lol
 
 # you need some stuff like nasm, g++, ld and grub2-mkrescue
 # and change BLOCK DEVICE VERY IMPORTANT line 18
