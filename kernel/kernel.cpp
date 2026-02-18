@@ -16,7 +16,8 @@ extern "C" void kernel_main(uint32_t magic, uint32_t* mbi_ptr) {
         set_color(n, (n^67) % 16);
         print("real loading screen.....\n");
     }
-    
+
+    set_color(0, 0);
     clear();
 
     set_color(10, 0); // black background
@@ -25,10 +26,10 @@ extern "C" void kernel_main(uint32_t magic, uint32_t* mbi_ptr) {
     set_color(15, 0);
     print("kernel loaded. peak has finally arrived\n");
 
-set_color(12, 0);
+    set_color(12, 0);
     print("Made By Realyby And Cramangako\n");
 
-set_color(9, 0);
+    set_color(9, 0);
     print("Check the Cmds.MD for help on commands!\n");
 
 
