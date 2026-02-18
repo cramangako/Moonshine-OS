@@ -24,7 +24,7 @@
 void clear();
 void scroll();
 void putchar(char c);
-void print(const char* str);
+void speak(const char* str);
 void set_color(uint8_t fg, uint8_t bg);
 
 #endif
