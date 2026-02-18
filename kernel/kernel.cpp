@@ -12,21 +12,15 @@ extern "C" void kernel_main(uint32_t magic, uint32_t* mbi_ptr) {
         return;
     }
 
+    for (int n = 0; n < 200; n++) {
+        set_color(n, (n^67) % 16);
+        print("real loading screen.....\n");
+    }
+    
+    clear();
+
     set_color(10, 0); // black background
     print("Moonshine-OS v0.1\n");
-
-    for (int n = 0; n < 160; n++) {
-        set_color(n, (n + 1) % 16);
-        print("man this shit lookes ass.\n");
-    }
-
-    for (int n = 0; n < 160; n++) {
-        set_color(n, (n^67) % 16);
-        print("actually this looks majestic\n");
-    }
-
-    set_color(15, 0);
-    clear();
 
     set_color(15, 0);
     print("kernel loaded. peak has finally arrived\n");
