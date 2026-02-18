@@ -12,7 +12,7 @@ extern "C" void kernel_main(uint32_t magic, uint32_t* mbi_ptr) {
         return;
     }
 
-    for (int n = 0; n < 200; n++) {
+    for (int n = 0; n < 250; n++) {
         set_color(n, (n^67) % 16);
         speak("real loading screen.....\n");
     }
@@ -31,6 +31,10 @@ extern "C" void kernel_main(uint32_t magic, uint32_t* mbi_ptr) {
 
     set_color(9, 0);
     speak("Check the Cmds.MD for help on commands!\n");
+
+set_color(15, 0);
+    speak("ⓘ This message isn't available in your region.\n");
+
 
 
     while (true) { // halt forever!!!
