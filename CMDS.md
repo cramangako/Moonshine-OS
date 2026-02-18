@@ -19,6 +19,16 @@ set_color - set_color 5
 
 scroll - scroll (scrolls) 
 
+version - tells you the current version
+
+------------------------------------------------------------------------
+
+# Possible to be made in the future 
+
+
+
+idk yet
+
 
 
 ------------------------------------------------------------------------
