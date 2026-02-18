@@ -48,8 +48,8 @@ void putchar(char c) {
     }
 }
 
-// print a whole string by looping through each character
-void print(const char* str) {
+// speak a whole string by looping through each character
+void speak(const char* str) {
     while (*str) {
         putchar(*str);
         str++;
