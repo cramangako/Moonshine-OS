@@ -24,6 +24,10 @@ halt - expose halt as a typed command
 
 nuke - blow up everything
 
+art - gives ASCII art 
+
+
+
 ------------------------------------------------------------------------
 
 # Possible to be made in the future 
