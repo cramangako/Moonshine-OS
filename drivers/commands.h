@@ -11,3 +11,5 @@ void whoami();
 void clear();
 
 void version();
+
+void enjoy();

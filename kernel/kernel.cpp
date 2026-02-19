@@ -202,11 +202,11 @@ extern "C" void kernel_main() {
         char c = keyboard_getchar();
         if (c) {
             if (c == '\n') {
-                console_speak("\n> ");
+                console_speak("\n");
                 check_commands();
-                console_speak("\n> ");
+                console_speak("> ");
             } else {
-                console_putchar(c);
+                console_input(c);
             }
         }
     }

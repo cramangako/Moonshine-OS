@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 void help() {
-    console_speak("help in commands.cpp was calleds\n");
+    console_speak("commands: help, clear, whoami, version\n");
 }
 
 void whoami() {
@@ -16,4 +16,8 @@ void clear() {
 
 void version() {
     console_speak("2.1.1\n");
+}
+
+void enjoy() {
+    console_speak("is the best song on post\n");
 }

@@ -10,8 +10,9 @@ static uint64_t            s_cur_x = 0;
 static uint64_t            s_cur_y = 0;
 
 //defining command buffer, everything is stored (commands + arguments), clears every new line
-const int buffer_size = 256; 
+const int buffer_size = 256;
 char command_buffer[buffer_size];
+static int cmd_len = 0;
 
 // char cell size: 8px wide, 10px tall (8 glyph + 2 gap between lines)
 static const uint64_t CW = 8;
@@ -55,11 +56,11 @@ static void scroll() {
 }
 
 void console_putchar(char c) {
-    if (c == '\n') { // newline, clean the command buffer
+    if (c == '\n') { // newline
         s_cur_x  = 0;
         s_cur_y += CH;
 
-    } else if (c == '\b') { // backspace, remove last char in command buffer
+    } else if (c == '\b') { // backspace
         if (s_cur_x >= CW) {
             s_cur_x -= CW;
         } else if (s_cur_y >= CH) {
@@ -73,7 +74,7 @@ void console_putchar(char c) {
         return;
 
     } else {
-        font_draw_char(s_fb, s_cur_x, s_cur_y, c, s_fg, s_bg); // append c
+        font_draw_char(s_fb, s_cur_x, s_cur_y, c, s_fg, s_bg);
         s_cur_x += CW;
 
         if (s_cur_x + CW > s_fb->width) {
@@ -102,7 +103,38 @@ void console_clear() { // floods everything with background colour
     s_cur_y = 0;
 }
 
+// only called for actual keyboard input - stores in buffer AND displays
+void console_input(char c) {
+    if (c == '\b') {
+        if (cmd_len > 0) cmd_len--;
+    } else if (c >= 32 && cmd_len < buffer_size - 1) {
+        command_buffer[cmd_len++] = c;
+    }
+    console_putchar(c);
+}
+
+static bool streq(const char* a, const char* b) { // streq implemenation, returns true if BOTH strings are equal, else false
+    while (*a && *b) {
+        if (*a != *b) return false;
+        a++; b++;
+    }
+    return *a == *b;
+}
+
 void check_commands() {
-    version();
-    whoami();
+    command_buffer[cmd_len] = '\0';
+
+    if      (streq(command_buffer, "help"))    help();
+    else if (streq(command_buffer, "clear"))   clear();
+    else if (streq(command_buffer, "whoami"))  whoami();
+    else if (streq(command_buffer, "version")) version();
+    else if (streq(command_buffer, "enjoy")) enjoy();
+    else if (cmd_len > 0) {
+        console_speak("unknown command: ");
+        console_speak(command_buffer);
+        console_speak("\n");
+    }
+
+    cmd_len = 0;
+    command_buffer[0] = '\0'; // epic troll because we trick compiler into thinking buffer is wiped
 }

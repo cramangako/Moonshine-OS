@@ -17,4 +17,6 @@ void console_speak(const char* str);
 
 void console_clear();
 
+void console_input(char c);
+
 void check_commands();
