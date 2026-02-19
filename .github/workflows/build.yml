@@ -2,9 +2,7 @@ name: Build
 
 on:
   push:
-    branches: [limine]
   pull_request:
-    branches: [limine]
 
 jobs:
   build:
