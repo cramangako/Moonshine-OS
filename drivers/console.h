@@ -7,6 +7,8 @@
 // just check usage in kernel.cpp
 void console_init(limine_framebuffer* fb, uint32_t fg, uint32_t bg);
 
+void console_colour(limine_framebuffer* fb, uint32_t fg, uint32_t bg);
+
 // print one character. Handles '\n' (newline), '\b' (backspace), and scrolling.
 void console_putchar(char c);
 
@@ -14,3 +16,5 @@ void console_putchar(char c);
 void console_speak(const char* str);
 
 void console_clear();
+
+void check_commands();

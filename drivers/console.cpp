@@ -1,12 +1,17 @@
 #include "console.h"
 #include "font.h"
 #include <stdint.h>
+#include "commands.h"
 
 static limine_framebuffer* s_fb  = nullptr;
 static uint32_t            s_fg  = 0;
 static uint32_t            s_bg  = 0;
 static uint64_t            s_cur_x = 0;
 static uint64_t            s_cur_y = 0;
+
+//defining command buffer, everything is stored (commands + arguments), clears every new line
+const int buffer_size = 256; 
+char command_buffer[buffer_size];
 
 // char cell size: 8px wide, 10px tall (8 glyph + 2 gap between lines)
 static const uint64_t CW = 8;
@@ -18,6 +23,12 @@ void console_init(limine_framebuffer* fb, uint32_t fg, uint32_t bg) {
     s_bg    = bg;
     s_cur_x = 0;
     s_cur_y = 0;
+}
+
+void console_colour(limine_framebuffer* fb, uint32_t fg, uint32_t bg) {
+    s_fb    = fb;
+    s_fg    = fg;
+    s_bg    = bg;
 }
 
 // moves all rows up by CH pixels when the cursor hits the bottom
@@ -44,11 +55,11 @@ static void scroll() {
 }
 
 void console_putchar(char c) {
-    if (c == '\n') {
+    if (c == '\n') { // newline, clean the command buffer
         s_cur_x  = 0;
         s_cur_y += CH;
 
-    } else if (c == '\b') {
+    } else if (c == '\b') { // backspace, remove last char in command buffer
         if (s_cur_x >= CW) {
             s_cur_x -= CW;
         } else if (s_cur_y >= CH) {
@@ -62,7 +73,7 @@ void console_putchar(char c) {
         return;
 
     } else {
-        font_draw_char(s_fb, s_cur_x, s_cur_y, c, s_fg, s_bg);
+        font_draw_char(s_fb, s_cur_x, s_cur_y, c, s_fg, s_bg); // append c
         s_cur_x += CW;
 
         if (s_cur_x + CW > s_fb->width) {
@@ -89,4 +100,9 @@ void console_clear() { // floods everything with background colour
     }
     s_cur_x = 0;
     s_cur_y = 0;
+}
+
+void check_commands() {
+    version();
+    whoami();
 }

@@ -5,8 +5,7 @@
 #include "../drivers/keyboard.h"
 #include <stdint.h>
 
-/*officially below you is worst code ever written
-so buns
+/*
 
 epic miss edwards jumpscare
 
@@ -180,13 +179,22 @@ extern "C" void kernel_main() {
 
     uint32_t black = make_color(fb,   0,   0,   0);
     uint32_t white = make_color(fb, 255, 255, 255);
+    uint32_t red = make_color(fb, 255, 0, 0);
+    uint32_t green = make_color(fb, 0, 255, 0);
+    uint32_t blue = make_color(fb, 0, 0, 255);
 
-    fill_screen(fb, black);
-    console_init(fb, white, black);
+    console_init(fb, white, black); // framebuffer, text/foreground colour, background colour
 
+    console_colour(fb, green, black);
     console_speak("Moonshine OS\n");
     console_speak("------------\n");
+    console_colour(fb, blue, black);
     console_speak("Made with love by cramangako and Realyby\n");
+    console_colour(fb, white, black);
+    console_speak("use help to get list of commands\n");
+
+    
+
     console_speak("> ");
 
     // keep polling the keyboard - getchar() returns 0 when nothing is pressed
@@ -194,6 +202,8 @@ extern "C" void kernel_main() {
         char c = keyboard_getchar();
         if (c) {
             if (c == '\n') {
+                console_speak("\n> ");
+                check_commands();
                 console_speak("\n> ");
             } else {
                 console_putchar(c);

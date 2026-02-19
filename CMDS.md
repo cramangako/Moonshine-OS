@@ -26,6 +26,8 @@ nuke - blow up everything
 
 art - gives ASCII art 
 
+whoami - prints user
+
 
 
 ------------------------------------------------------------------------
