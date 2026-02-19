@@ -1,8 +1,8 @@
-# Moonshine-OS 
-a operating system with: - Custom kernel -
-Bootloader setup using GRUB - Build system with Makefile
+# Moonshine-OS
+a operating system with: - Custom C++ kernel -
+Bootloader setup using Limine - Build system with Makefile
 
-# Version: Prototype 2.0.1
+# Version: Prototype 2.1.0
 
   ----------------------------------------
   Requirements (What you need installed)
@@ -10,15 +10,15 @@ Bootloader setup using GRUB - Build system with Makefile
 
 Before building Moonshine-OS, install these tools:
 
--   nasm → assembles the boot code
 -   g++ → compiles the kernel (C++)
 -   ld → links everything into a binary
--   grub2-mkrescue → creates a bootable ISO
+-   xorriso → creates a bootable ISO
+-   curl → downloads limine.h on first build
 -   qemu (optional) → runs the OS in a virtual machine
 
 On Debian/Ubuntu you can install most of these with:
 
-sudo apt install build-essential nasm grub-pc-bin xorriso qemu-system
+sudo apt install build-essential xorriso curl qemu-system
 
   -------------------------------
   IMPORTANT WARNING (USB users)
@@ -47,8 +47,8 @@ Compile the OS:
 
 make
 
-This will: 1. Assemble boot.asm 2. Compile kernel.cpp 3. Link them into
-build/moonshine.bin
+This will: 1. Download limine.h if missing 2. Compile kernel.cpp and all
+drivers 3. Link them into build/moonshine.elf
 
 ------------------------------------------------------------------------
 
@@ -58,9 +58,9 @@ make iso
 
 Does everything from make plus creates:
 
-build/moonshine.iso
+moonshine.iso
 
-You can burn this to a CD or use it in a VM.
+You can burn this to a USB or use it in a VM.
 
 ------------------------------------------------------------------------
 
