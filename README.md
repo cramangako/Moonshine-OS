@@ -4,6 +4,9 @@ Bootloader setup using Limine - Build system with Makefile
 
 # Version: Prototype 2.1.0
 
+why do we keep skipping versions?
+
+
   ----------------------------------------
   Requirements (What you need installed)
   ----------------------------------------
